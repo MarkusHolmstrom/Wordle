@@ -2,22 +2,104 @@
 //
 
 #include <iostream>
-#include <"ColorChanger.h">
+#include <vector>
+#include "ColorChanger.cpp"
+#include "GameState.cpp"
+#include "FileReader.cpp"
+
 using namespace std;
+
+void guessingLoop();
+
+void checkWord(string guess, string target);
+
+string transformTarget(string target, char rem);
+
+Color checkLetter(char guess, int pos, string target);
 
 int main()
 {
     cout << FOREGROUND(ForegroundColor::BrightRed, "Hello world!") << endl;
     cout << BACKGROUND(BackgroundColor::BrightRed, "Hello world!") << endl;
+    FileReader fr;
+    GameState state;
+    // Get a random word from list
+    string s = state.setTargetWord(fr.getAWord());
+    checkWord("ALBCC", s);
+    fr.getAWord();
+    if (!state.canAddGuess(s))
+    {
+        // game over
+    }
+    string a = fr.getAWord();
+    string b = fr.getAWord();
+    fr.getAWord();
+    fr.getAWord();
+    fr.getAWord();
+
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+void guessingLoop() 
+{
+    while (true)
+    {
+        cout << "Your guess?" << endl;
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+    }
+}
+
+// Must be five letters each
+void checkWord(string guess, string target) {
+    vector<Color> colors;
+    for (size_t i = 0; i < 5; i++)
+    {
+        Color color = checkLetter(guess[i], i, target);
+        colors.push_back(color);
+        if (color == Color::Yellow)
+        {
+            // remove one char from target thats already been matched
+            target = transformTarget(target, guess[i]);
+        }
+        //cout << " " << color << endl;
+    }
+}
+// Removes a certain char from the string target
+string transformTarget(string target, char rem) {
+    string newTarget = target;
+    for (size_t i = 0; i < 5; i++)
+    {
+        if (newTarget[i] == rem)
+        {
+            newTarget[i] = ' ';
+        }
+    }
+    cout << newTarget << endl;
+    return newTarget;
+}
+
+Color checkLetter(char guess, int pos, string target) {
+    if (target[pos] == guess)
+    {
+        // Correct letter, correct location
+
+        cout << "Correct letter, correct location"  << endl;
+        return Color::Green;
+    }
+    for (size_t i = 0; i < 5; i++)
+    {
+        if (target[i] == guess)
+        {
+            cout << "Correct letter, wrong location" << endl;
+            // Correct letter, wrong location
+            return Color::Yellow;
+        }
+    }
+        cout << "Letter not found in target word" << endl;
+    // Letter not found in target word
+    return Color::Gray;
+}
+
+
+// inte i ordet: grå bakgrund
+// rätt bokstav, fel plats: gul bkagrund
+// dubbelrätt: grön bakgrund
