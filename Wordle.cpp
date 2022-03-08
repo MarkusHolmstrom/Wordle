@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void guessingLoop();
+string guessingLoop();
 
 void checkWord(string guess, string target);
 
@@ -17,20 +17,37 @@ string transformTarget(string target, char rem);
 
 Color checkLetter(char guess, int pos, string target);
 
+bool restartGame();
+
 int main()
 {
+start:
     cout << FOREGROUND(ForegroundColor::BrightRed, "Hello world!") << endl;
     cout << BACKGROUND(BackgroundColor::BrightRed, "Hello world!") << endl;
     FileReader fr;
     GameState state;
     // Get a random word from list
-    string s = state.setTargetWord(fr.getAWord());
-    checkWord("ALBCC", s);
-    fr.getAWord();
-    if (!state.canAddGuess(s))
+    string target = state.setTargetWord(fr.getAWord());
+    //checkWord("ALBCC", s);
+    //fr.getAWord();
+
+    bool guessing = true;
+    while (guessing)
     {
-        // game over
+        string guess = guessingLoop();
+        checkWord(guess, target);
+
+        if (!state.canAddGuess(guess))
+        {
+            guessing = false;
+        }
     }
+    // todoo output guesses and right target
+    if (restartGame())
+    {
+        goto start;
+    }
+
     string a = fr.getAWord();
     string b = fr.getAWord();
     fr.getAWord();
@@ -39,13 +56,37 @@ int main()
 
 }
 
-void guessingLoop() 
+string guessingLoop() 
 {
-    while (true)
+    string inp = "     ";
+    bool valid = false;
+    while (!valid)
     {
+    reguess:
         cout << "Your guess?" << endl;
-
+        cin >> inp;
+        if (inp.size() == 5)
+        {
+            for (size_t i = 0; i < inp.size(); i++)
+            {
+                // Is it not a letter?
+                if (!isalpha(inp[i]))
+                {
+                    cout << "Invalid input: only letters allowed, please try again:" << endl;
+                    goto reguess;
+                }
+                inp[i] = toupper(inp[i]);
+            }
+            valid = true;
+        }
+        else
+        {
+            cout << "Invalid inputmust be five letters long, please try again:" << endl;
+            goto reguess;
+        }
     }
+    cout << inp << endl;
+    return inp;
 }
 
 // Must be five letters each
@@ -98,6 +139,21 @@ Color checkLetter(char guess, int pos, string target) {
     // Letter not found in target word
     return Color::Gray;
 }
+
+bool restartGame() {
+    cout << "Game over, wanna play again? type 'y' for yay, else for no";
+    char inp;
+    cin >> inp;
+    if (inp == 'y')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 
 
 // inte i ordet: grå bakgrund
