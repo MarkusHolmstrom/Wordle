@@ -27,7 +27,7 @@ public:
             //cout << str << " indexp: " << index << "\n";
             if (random == index)
             {
-                cout << str << " index: plop" << index << "\n";
+                //cout << str << " index: plop" << index << "\n";
                 return str;
             }
             index++;

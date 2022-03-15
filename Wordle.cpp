@@ -11,49 +11,43 @@ using namespace std;
 
 string guessingLoop();
 
-void checkWord(string guess, string target);
+bool checkWord(string guess, string target);
 
 string transformTarget(string target, char rem);
 
-Color checkLetter(char guess, int pos, string target);
+BackgroundColor searchForCorrect(char guess, int pos, string target);
+
+BackgroundColor checkLetter(char guess, int pos, string target, bool greenSearch);
 
 bool restartGame();
+
+GameState state;
 
 int main()
 {
 start:
-    cout << FOREGROUND(ForegroundColor::BrightRed, "Hello world!") << endl;
-    cout << BACKGROUND(BackgroundColor::BrightRed, "Hello world!") << endl;
+    cout << "Starting 'Wordle' game... finding random word... " << endl;
+    state = GameState();
     FileReader fr;
-    GameState state;
     // Get a random word from list
     string target = state.setTargetWord(fr.getAWord());
-    //checkWord("ALBCC", s);
-    //fr.getAWord();
+    cout << "Got a five letter word now. " << endl;
 
     bool guessing = true;
     while (guessing)
     {
         string guess = guessingLoop();
-        checkWord(guess, target);
 
-        if (!state.canAddGuess(guess))
+        if (checkWord(guess, target) || !state.canAddGuess(guess))
         {
             guessing = false;
         }
     }
-    // todoo output guesses and right target
+
     if (restartGame())
     {
         goto start;
     }
-
-    string a = fr.getAWord();
-    string b = fr.getAWord();
-    fr.getAWord();
-    fr.getAWord();
-    fr.getAWord();
-
 }
 
 string guessingLoop() 
@@ -81,28 +75,67 @@ string guessingLoop()
         }
         else
         {
-            cout << "Invalid inputmust be five letters long, please try again:" << endl;
+            cout << "Invalid input: must be five letters long, please try again:" << endl;
             goto reguess;
         }
     }
-    cout << inp << endl;
     return inp;
 }
 
+// todo 
+// 
 // Must be five letters each
-void checkWord(string guess, string target) {
-    vector<Color> colors;
+bool checkWord(string guess, string target) {
+    string tempGuess = guess;
+    BackgroundColor colors[5] { BackgroundColor::Gray, 
+        BackgroundColor::Gray, BackgroundColor::Gray, BackgroundColor::Gray,BackgroundColor::Gray };
+    // Need to check for correct letters at correct positions first...
     for (size_t i = 0; i < 5; i++)
     {
-        Color color = checkLetter(guess[i], i, target);
-        colors.push_back(color);
-        if (color == Color::Yellow)
+        BackgroundColor color = checkLetter(guess[i], i, target, true);
+        if (color == BackgroundColor::Green)
         {
-            // remove one char from target thats already been matched
+            colors[i] = color;
+            // remove one char from target and guess thats already been matched
+            target = transformTarget(target, guess[i]);
+            guess = transformTarget(guess, guess[i]);
+        }
+    }
+    // ... then the correct letters at the wrong positions...
+    for (size_t i = 0; i < 5; i++)
+    {
+        BackgroundColor color = checkLetter(tempGuess[i], i, target, false);
+        if (color == BackgroundColor::Yellow)
+        {
+            // avoid overwriting already green ones
+            if (colors[i] != BackgroundColor::Green)
+            {
+                colors[i] = color;
+            }
+            // remove one char from target thats already been found
             target = transformTarget(target, guess[i]);
         }
-        //cout << " " << color << endl;
     }
+    // ... before we print it out to show how correct they are
+    for (size_t i = 0; i < 5; i++)
+    {
+        if (colors[i] == BackgroundColor::Gray)
+        {
+            cout << FOREGROUND(ForegroundColor::BrightRed, BACKGROUND(BackgroundColor::Gray, tempGuess[i]));
+        }
+        else
+        {
+            cout << BACKGROUND(colors[i], tempGuess[i]);
+        }
+        
+    }
+    cout << endl;
+    if (tempGuess == state.getTargetWord())
+    {
+        cout << "Correct! " << '"' << state.getTargetWord() << '"' << " is what we were looking for!" << endl;
+        return true;
+    }
+    return false;
 }
 // Removes a certain char from the string target
 string transformTarget(string target, char rem) {
@@ -112,39 +145,40 @@ string transformTarget(string target, char rem) {
         if (newTarget[i] == rem)
         {
             newTarget[i] = ' ';
+    //cout << newTarget << endl;
+            return newTarget;
         }
     }
-    cout << newTarget << endl;
     return newTarget;
 }
 
-Color checkLetter(char guess, int pos, string target) {
-    if (target[pos] == guess)
+BackgroundColor checkLetter(char guess, int pos, string target, bool greenSearch) {
+    if (target[pos] == guess)// && greenSearch)
     {
         // Correct letter, correct location
-
-        cout << "Correct letter, correct location"  << endl;
-        return Color::Green;
+        return BackgroundColor::Green;
     }
-    for (size_t i = 0; i < 5; i++)
+    if (!greenSearch)
     {
-        if (target[i] == guess)
+        for (size_t i = 0; i < 5; i++)
         {
-            cout << "Correct letter, wrong location" << endl;
-            // Correct letter, wrong location
-            return Color::Yellow;
+            if (target[i] == guess)
+            {
+                // Correct letter, wrong location
+                return BackgroundColor::Yellow;
+            }
         }
     }
-        cout << "Letter not found in target word" << endl;
     // Letter not found in target word
-    return Color::Gray;
+    return BackgroundColor::Gray;
 }
 
 bool restartGame() {
-    cout << "Game over, wanna play again? type 'y' for yay, else for no";
+    cout << "Out of guesses, the word " << '"' << state.getTargetWord() << '"' << " is what we were looking for." << endl;
+    cout << "You want to play again? type 'y' for yay, something else for no" << endl;
     char inp;
     cin >> inp;
-    if (inp == 'y')
+    if (inp == 'y' || inp == 'Y')
     {
         return true;
     }

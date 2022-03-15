@@ -7,9 +7,14 @@ using namespace std;
 class GameState {
 private:
 	string target;
-	string guesses[5]{ "", "", "", "", "" };
+	string guesses[6]{ "", "", "", "", "", "" };
 	int guessCount = 0;
 public:
+	GameState() {
+		target = "     ";
+		guesses->clear();
+		guessCount = 0;
+	}
 	string setTargetWord(string word) {
 		return target = word;
 	}
@@ -20,19 +25,11 @@ public:
 	bool canAddGuess(string guess) {
 		guesses[guessCount] = guess;
 		guessCount++;
-		cout << guessCount << " " << guess << endl;
-		// Check to end the while loop in main when 5th guess has been added 
-		if (guessCount >= 5)
+		// Check to end the while loop in main when 6th guess has been added 
+		if (guessCount >= 6)
 		{
 			return false;
 		}
-		for (size_t i = 0; i < 5; i++)
-		{
-			cout << guesses[i] << endl;
-		}
 		return true;
 	}
-	/*string getGuesses(){
-		return guesses;
-	}*/
 };
