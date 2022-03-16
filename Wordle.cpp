@@ -13,9 +13,7 @@ string guessingLoop();
 
 bool checkWord(string guess, string target);
 
-string transformTarget(string target, char rem);
-
-BackgroundColor searchForCorrect(char guess, int pos, string target);
+string transformString(string target, char rem);
 
 BackgroundColor checkLetter(char guess, int pos, string target, bool greenSearch);
 
@@ -27,11 +25,12 @@ int main()
 {
 start:
     cout << "Starting 'Wordle' game... finding random word... " << endl;
+    // Create new instance of gamestate, that holds info about the game
     state = GameState();
     FileReader fr;
     // Get a random word from list
     string target = state.setTargetWord(fr.getAWord());
-    cout << "Got a five letter word now. " << endl;
+    cout << "Oh, there we go, got a five letter word now. " << endl;
 
     bool guessing = true;
     while (guessing)
@@ -43,6 +42,7 @@ start:
             guessing = false;
         }
     }
+    // todo if guess right 6th time, fail text appears...
 
     if (restartGame())
     {
@@ -82,8 +82,6 @@ string guessingLoop()
     return inp;
 }
 
-// todo 
-// 
 // Must be five letters each
 bool checkWord(string guess, string target) {
     string tempGuess = guess;
@@ -97,8 +95,8 @@ bool checkWord(string guess, string target) {
         {
             colors[i] = color;
             // remove one char from target and guess thats already been matched
-            target = transformTarget(target, guess[i]);
-            guess = transformTarget(guess, guess[i]);
+            target = transformString(target, guess[i]);
+            guess = transformString(guess, guess[i]);
         }
     }
     // ... then the correct letters at the wrong positions...
@@ -113,7 +111,7 @@ bool checkWord(string guess, string target) {
                 colors[i] = color;
             }
             // remove one char from target thats already been found
-            target = transformTarget(target, guess[i]);
+            target = transformString(target, guess[i]);
         }
     }
     // ... before we print it out to show how correct they are
@@ -121,7 +119,7 @@ bool checkWord(string guess, string target) {
     {
         if (colors[i] == BackgroundColor::Gray)
         {
-            cout << FOREGROUND(ForegroundColor::BrightRed, BACKGROUND(BackgroundColor::Gray, tempGuess[i]));
+            cout << FOREGROUND(ForegroundColor::White, BACKGROUND(BackgroundColor::Gray, tempGuess[i]));
         }
         else
         {
@@ -138,14 +136,13 @@ bool checkWord(string guess, string target) {
     return false;
 }
 // Removes a certain char from the string target
-string transformTarget(string target, char rem) {
+string transformString(string target, char rem) {
     string newTarget = target;
     for (size_t i = 0; i < 5; i++)
     {
         if (newTarget[i] == rem)
         {
             newTarget[i] = ' ';
-    //cout << newTarget << endl;
             return newTarget;
         }
     }
@@ -164,7 +161,7 @@ BackgroundColor checkLetter(char guess, int pos, string target, bool greenSearch
         {
             if (target[i] == guess)
             {
-                // Correct letter, wrong location
+                // Letter in word, but wrong location
                 return BackgroundColor::Yellow;
             }
         }
@@ -174,7 +171,6 @@ BackgroundColor checkLetter(char guess, int pos, string target, bool greenSearch
 }
 
 bool restartGame() {
-    cout << "Out of guesses, the word " << '"' << state.getTargetWord() << '"' << " is what we were looking for." << endl;
     cout << "You want to play again? type 'y' for yay, something else for no" << endl;
     char inp;
     cin >> inp;
@@ -187,9 +183,3 @@ bool restartGame() {
         return false;
     }
 }
-
-
-
-// inte i ordet: grå bakgrund
-// rätt bokstav, fel plats: gul bkagrund
-// dubbelrätt: grön bakgrund

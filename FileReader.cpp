@@ -16,18 +16,15 @@ public:
             exit(1); // terminate with error
         }
         string str;
-        //int random = rand_r() & 8597;
-        //srand(time(0));
-        
+
         int random = rand()%8597;
-        srand(time(NULL));// reset random nr?, - not 1st one... https://www.cplusplus.com/reference/cstdlib/srand/
+        srand(time(NULL));// reset random nr, expt the 1st one... https://www.cplusplus.com/reference/cstdlib/srand/
         int index = 0;
-        //https://www.systutorials.com/how-to-process-a-file-line-by-line-in-c/
+        // Go through textfile line by line:
+        // https://www.systutorials.com/how-to-process-a-file-line-by-line-in-c/
         while (getline(inFile, str)) {
-            //cout << str << " indexp: " << index << "\n";
             if (random == index)
             {
-                //cout << str << " index: plop" << index << "\n";
                 return str;
             }
             index++;
@@ -35,4 +32,3 @@ public:
         return str;
     }
 };
-// http://www.cplusplus.com/forum/beginner/141904/

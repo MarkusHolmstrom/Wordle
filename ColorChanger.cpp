@@ -8,6 +8,7 @@ enum class ForegroundColor : int {
     Red = 31,
     Green = 32,
     Yellow = 33,
+    White = 37,
     BrightRed = 91,
     BrightGreen = 92,
     BrightYellow = 93
@@ -20,12 +21,8 @@ enum class BackgroundColor : int {
     Red = 41,
     Green = 42,
     Yellow = 43,
-    Gray = 47,
+    Gray = 100,
     BrightRed = 101,
     BrightGreen = 102,
     BrightYellow = 103
 };
-//
-//void ColorChanger::method() {
-//    cout << "höpp" << endl;
-//}

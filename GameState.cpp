@@ -28,6 +28,7 @@ public:
 		// Check to end the while loop in main when 6th guess has been added 
 		if (guessCount >= 6)
 		{
+			cout << "Out of guesses, the word " << '"' << target << '"' << " is what we were looking for." << endl;
 			return false;
 		}
 		return true;
