@@ -29,6 +29,7 @@ start:
     // Get a random word from list
     string target = state.setTargetWord(fr.getAWord());
     cout << "Oh, there we go, got a five letter word now. " << endl;
+
     // Guessing loop
     bool guessing = true;
     while (guessing)

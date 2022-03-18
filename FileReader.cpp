@@ -17,12 +17,13 @@ public:
         }
         string str;
 
-        int random = rand()%8597;
-        // reset random nr, expt the 1st one... https://www.cplusplus.com/reference/cstdlib/srand/
+        // reset random nr (source: https://www.cplusplus.com/reference/cstdlib/srand/)
         srand(time(NULL));
+        int random = rand()%8597;
+
         int index = 0;
         // Go through textfile line by line:
-        // https://www.systutorials.com/how-to-process-a-file-line-by-line-in-c/
+        // (source: https://www.systutorials.com/how-to-process-a-file-line-by-line-in-c/)
         while (getline(inFile, str)) {
             if (random == index)
             {
