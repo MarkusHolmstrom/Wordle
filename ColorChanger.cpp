@@ -14,9 +14,6 @@ enum class ForegroundColor : int {
     BrightYellow = 93
 };
 
-enum class Color { //class elr ej?
-    Gray, Yellow, Green
-};
 enum class BackgroundColor : int {
     Red = 41,
     Green = 42,

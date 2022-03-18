@@ -1,5 +1,3 @@
-// Wordle.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 
 #include <iostream>
 #include <vector>
@@ -31,7 +29,7 @@ start:
     // Get a random word from list
     string target = state.setTargetWord(fr.getAWord());
     cout << "Oh, there we go, got a five letter word now. " << endl;
-
+    // Guessing loop
     bool guessing = true;
     while (guessing)
     {
@@ -42,8 +40,7 @@ start:
             guessing = false;
         }
     }
-    // todo if guess right 6th time, fail text appears...
-
+    
     if (restartGame())
     {
         goto start;
