@@ -147,7 +147,7 @@ string transformString(string target, char rem) {
 }
 
 BackgroundColor checkLetter(char guess, int pos, string target, bool greenSearch) {
-    if (target[pos] == guess)// && greenSearch)
+    if (target[pos] == guess)
     {
         // Correct letter, correct location
         return BackgroundColor::Green;

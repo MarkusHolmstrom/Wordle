@@ -18,7 +18,8 @@ public:
         string str;
 
         int random = rand()%8597;
-        srand(time(NULL));// reset random nr, expt the 1st one... https://www.cplusplus.com/reference/cstdlib/srand/
+        // reset random nr, expt the 1st one... https://www.cplusplus.com/reference/cstdlib/srand/
+        srand(time(NULL));
         int index = 0;
         // Go through textfile line by line:
         // https://www.systutorials.com/how-to-process-a-file-line-by-line-in-c/
