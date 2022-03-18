@@ -139,15 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ColorChange.cpp" />
     <ClCompile Include="ColorChanger.cpp" />
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Wordle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ColorChange.h" />
-    <ClInclude Include="ColorChanger.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
